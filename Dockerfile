@@ -44,15 +44,20 @@ RUN echo y | android update sdk --all --force --no-ui --filter ${ANDROID_COMPONE
 #===================
 # Nodejs and Appium
 #===================
-USER appium
-ENV APPIUM_VERSION 1.4.16
+RUN mkdir /opt/appium
+RUN useradd -m -s /bin/bash appium
+RUN chown -R appium:appium /opt/appium
+ENV HOME /home/appium
+
+RUN cd /opt/appium \
+    && npm install -g appium@1.4.16 \
+    && npm cache clean \
+
 RUN apt-get update -qqy \
   && apt-get -qqy --no-install-recommends install \
     nodejs \
     npm \
   && ln -s /usr/bin/nodejs /usr/bin/node \
-  && npm install -g appium@$APPIUM_VERSION \
-  && npm cache clean \
   && apt-get remove --purge -y npm \
   && apt-get autoremove --purge -y \
   && rm -rf /var/lib/apt/lists/*
