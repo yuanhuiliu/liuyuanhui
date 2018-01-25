@@ -50,17 +50,16 @@ RUN chown -R appium:appium /opt/appium
 ENV HOME /home/appium
 
 RUN cd /opt/appium \
+    && apt-get update -qqy \
+    && apt-get -qqy --no-install-recommends install \
+        nodejs \
+        npm \
     && npm install -g appium@1.4.16 \
     && npm cache clean \
-
-RUN apt-get update -qqy \
-  && apt-get -qqy --no-install-recommends install \
-    nodejs \
-    npm \
-  && ln -s /usr/bin/nodejs /usr/bin/node \
-  && apt-get remove --purge -y npm \
-  && apt-get autoremove --purge -y \
-  && rm -rf /var/lib/apt/lists/*
+    && ln -s /usr/bin/nodejs /usr/bin/node \
+    && apt-get remove --purge -y npm \
+    && apt-get autoremove --purge -y \
+    && rm -rf /var/lib/apt/lists/*
 
 #============================================
 # Add udev rules file with USB configuration
